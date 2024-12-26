@@ -29,6 +29,7 @@ namespace SinglePage.Sample01.Models.Services.Repositories
                     return new Response<Person>(false, HttpStatusCode.UnprocessableContent,ResponseMessages.NullInput, null);
                 }
                 await _projectDbContext.AddAsync(model);
+                _projectDbContext.SaveChanges();
                 var response = new Response<Person>(true, HttpStatusCode.OK, ResponseMessages.SuccessfullOperation, model);
                 return response;
             }

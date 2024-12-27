@@ -68,6 +68,27 @@ namespace SinglePage.Sample01.Controllers
             {
                 return BadRequest();
             }
+        }
+        #endregion
+
+        #region [- Delete() -]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromBody] DeletePersonServiceDto dto)
+        {
+            // Guard_PersonService();
+            var personToDelete = new DeletePersonServiceDto() { Id = dto.Id };
+            //var getResponse = await _personService.Get(personToDelete);
+
+            if (ModelState.IsValid )
+            {
+                var deleteResponse = await _personService.Delete(personToDelete);
+                return deleteResponse.IsSuccessful ? Ok() : BadRequest(deleteResponse.Message);
+            }
+     
+            else
+            {
+                return BadRequest(ModelState);
+            }
         } 
         #endregion
 

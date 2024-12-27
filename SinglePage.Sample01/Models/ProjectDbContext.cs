@@ -10,5 +10,7 @@ namespace SinglePage.Sample01.Models
         {
         }
         public DbSet<Person> Person { get; set; }
+
+  
     }
 }

@@ -113,15 +113,35 @@ namespace SinglePage.Sample01.ApplicationServices.Services
         }
         #endregion
 
+        #region [- Delete() -]
+        public async Task<IResponse<DeletePersonServiceDto>> Delete(DeletePersonServiceDto dto)
+        {
+            if (dto is null )
+            {
+                return new Response<DeletePersonServiceDto>(false, HttpStatusCode.UnprocessableContent, ResponseMessages.NullInput, null);
+            }
+            var personToDelete = new Person { Id = dto.Id };
+
+            var deletedResponse = await _personRepository.Delete(personToDelete);
+
+            if (!deletedResponse.IsSuccessful)
+            {
+                return new Response<DeletePersonServiceDto>(false, HttpStatusCode.UnprocessableContent, ResponseMessages.Error, null);
+            }
+
+            var response = new Response<DeletePersonServiceDto>(true, HttpStatusCode.OK, ResponseMessages.SuccessfullOperation, dto);
+            return response;
+        }
+        #endregion
+
+
+
         public Task<IResponse<PutPersonServiceDto>> Put(PutPersonServiceDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IResponse<DeletePersonServiceDto>> Delete(DeletePersonServiceDto dto)
-        {
-            throw new NotImplementedException();
-        }
+        
 
     }
 }

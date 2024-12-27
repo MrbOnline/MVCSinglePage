@@ -43,7 +43,7 @@ btnRefresh.addEventListener("click", LoadData);
 
 
 //Functionalties
-var selectedRows = [];
+var selectedRowsList = [];
 var allRowsCount;
 
 window.onload = LoadData();
@@ -143,47 +143,47 @@ function Add(e) {
 //    }
 //}
 
-//function Delete() {
-//    let id = idInDeleteConfirmModal.value;
-//    fetch("http://Localhost:5100/Person/Delete", {
-//        method: "POST",
-//        headers: {
-//            "Content-Type": "application/json",
-//            Accept: "*/*",
-//        },
-//        body: JSON.stringify({ Id: id }),
-//    }).then((res) => {
-//        if (res.status == 200) {
-//            TriggerResultMessage("Operation Successful");
-//            LoadData();
-//        } else {
-//            TriggerResultMessage("Operation Failed");
-//        }
-//    });
-//    idInDeleteConfirmModal.value = "";
-//}
+function Delete() {
+    let id = idInDeleteConfirmModal.value;
+    fetch("http://Localhost:5268/Person/Delete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+        },
+        body: JSON.stringify({ Id: id }),
+    }).then((res) => {
+        if (res.status == 200) {
+            TriggerResultMessage("Operation Successful");
+            LoadData();
+        } else {
+            TriggerResultMessage("Operation Failed");
+        }
+    });
+    idInDeleteConfirmModal.value = "";
+}
 
-//function DeleteSelected() {
-//    let deleteSelectedDto = { DeletePersonDtosList: [] };
-//    selectedRowsList.forEach((personId) => {
-//        deleteSelectedDto.DeletePersonDtosList.push({ Id: personId });
-//    });
-//    fetch("http://Localhost:5100/Person/DeleteSelected", {
-//        method: "POST",
-//        headers: {
-//            "Content-Type": "application/json",
-//            Accept: "*/*",
-//        },
-//        body: JSON.stringify(deleteSelectedDto),
-//    }).then((res) => {
-//        if (res.status == 200) {
-//            TriggerResultMessage("Operation Successful");
-//            LoadData();
-//        } else {
-//            TriggerResultMessage("Operation Failed");
-//        }
-//    });
-//}
+function DeleteSelected() {
+    let deleteSelectedDto = { DeletePersonDtosList: [] };
+    selectedRowsList.forEach((personId) => {
+        deleteSelectedDto.DeletePersonDtosList.push({ Id: personId });
+    });
+    fetch("http://Localhost:5268/Person/DeleteSelected", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+        },
+        body: JSON.stringify(deleteSelectedDto),
+    }).then((res) => {
+        if (res.status == 200) {
+            TriggerResultMessage("Operation Successful");
+            LoadData();
+        } else {
+            TriggerResultMessage("Operation Failed");
+        }
+    });
+}
 
 function DeselectAll() {
     document.querySelectorAll("#selectRow").forEach((checkBox) => {
@@ -212,40 +212,40 @@ function DeselectAll() {
     })
 }
 
-//function SelectRow(checkBox) {
-//    if (checkBox.checked == true) {
-//        selectedRowsList.push(checkBox.name);
-//    } else selectedRowsList.splice(selectedRowsList.indexOf(checkBox.name), 1);
+function SelectRow(checkBox) {
+    if (checkBox.checked == true) {
+        selectedRowsList.push(checkBox.name);
+    } else selectedRowsList.splice(selectedRowsList.indexOf(checkBox.name), 1);
 
-//    if (selectedRowsList.length != allRowsCount) cbxSelectAll.checked = false;
-//    else cbxSelectAll.checked = true;
+    if (selectedRowsList.length != allRowsCount) cbxSelectAll.checked = false;
+    else cbxSelectAll.checked = true;
 
-//    if (selectedRowsList.length >= 1) {
-//        btnDeleteSelected.disabled = false;
-//        btnInsert.disabled = true;
-//    } else {
-//        btnDeleteSelected.disabled = true;
-//        btnInsert.disabled = false;
-//    }
+    if (selectedRowsList.length >= 1) {
+        btnDeleteSelected.disabled = false;
+        btnInsert.disabled = true;
+    } else {
+        btnDeleteSelected.disabled = true;
+        btnInsert.disabled = false;
+    }
 
-//    if (selectedRowsList.length == 1) {
-//        btnEdit.disabled = false;
-//        RefreshForm();
-//        iptId.value = selectedRowsList[0];
-//        iptFirstName.value = document.querySelector(
-//            `tr[id="${selectedRowsList[0]}"] td[id="FNTD"]`
-//        ).innerText;
-//        iptLastName.value = document.querySelector(
-//            `tr[id="${selectedRowsList[0]}"] td[id="LNTD"]`
-//        ).innerText;
-//        iptNationalCode.value = document.querySelector(
-//            `tr[id="${selectedRowsList[0]}"] td[id="NCTD"]`
-//        ).innerText;
-//    } else {
-//        btnEdit.disabled = true;
-//        RefreshForm(true);
-//    }
-//}
+    if (selectedRowsList.length == 1) {
+        btnEdit.disabled = false;
+        RefreshForm();
+        iptId.value = selectedRowsList[0];
+        iptFirstName.value = document.querySelector(
+            `tr[id="${selectedRowsList[0]}"] td[id="FNTD"]`
+        ).innerText;
+        iptLastName.value = document.querySelector(
+            `tr[id="${selectedRowsList[0]}"] td[id="LNTD"]`
+        ).innerText;
+        iptNationalCode.value = document.querySelector(
+            `tr[id="${selectedRowsList[0]}"] td[id="NCTD"]`
+        ).innerText;
+    } else {
+        btnEdit.disabled = true;
+        RefreshForm(true);
+    }
+}
 
 //function Details(event) {
 //    let clickedButton = event.relatedTarget;
@@ -312,38 +312,39 @@ function ValidateFormData() {
     return isValidData;
 }
 
-//function ConfirmDelete(event) {
-//    let clickedButton = event.relatedTarget;
+function ConfirmDelete(event) {
+    let clickedButton = event.relatedTarget;
 
-//    if (clickedButton.value == "Delete") {
-//        let id = clickedButton.parentNode.parentNode.id;
-//        idInDeleteConfirmModal.value = id;
+    if (clickedButton.value == "Delete") {
+        let id = clickedButton.parentNode.parentNode.id;
+        idInDeleteConfirmModal.value = id;
 
-//        PassDetailsToDeleteConfirm(id);
+        PassDetailsToDeleteConfirm(id);
 
-//        btnDeleteConfirm.addEventListener("click", Delete);
-//    } else {
-//        if (selectedRowsList.length == 1)
-//            PassDetailsToDeleteConfirm(selectedRowsList[0]);
-//        else
-//            deleteConfirmModalBody.innerHTML = `Your are deleting <strong>${selectedRowsList.length} records</strong> , Are you sure ? `;
+        btnDeleteConfirm.addEventListener("click", Delete);
+        //btnDeleteConfirm.onclick = Delete;
+    } else {
+        if (selectedRowsList.length == 1)
+            PassDetailsToDeleteConfirm(selectedRowsList[0]);
+        else
+            deleteConfirmModalBody.innerHTML = `Your are deleting <strong>${selectedRowsList.length} records</strong> , Are you sure ? `;
 
-//        btnDeleteConfirm.addEventListener("click", DeleteSelected);
-//    }
-//}
+        btnDeleteConfirm.addEventListener("click", DeleteSelected);
+    }
+}
 
-//function PassDetailsToDeleteConfirm(id) {
-//    let firstName = document.querySelector(
-//        `tr[id="${id}"] td[id="FNTD"]`
-//    ).innerText;
-//    let lastName = document.querySelector(
-//        `tr[id="${id}"] td[id="LNTD"]`
-//    ).innerText;
-//    let nationalCode = document.querySelector(
-//        `tr[id="${id}"] td[id="NCTD"]`
-//    ).innerText;
-//    deleteConfirmModalBody.innerHTML = `You are deleting :<br><strong>First Name : ${firstName}<br>Last Name : ${lastName}<br>National Code : ${nationalCode}</strong><br>Are you sure ?`;
-//}
+function PassDetailsToDeleteConfirm(id) {
+    let firstName = document.querySelector(
+        `tr[id="${id}"] td[id="FNTD"]`
+    ).innerText;
+    let lastName = document.querySelector(
+        `tr[id="${id}"] td[id="LNTD"]`
+    ).innerText;
+    let nationalCode = document.querySelector(
+        `tr[id="${id}"] td[id="NCTD"]`
+    ).innerText;
+    deleteConfirmModalBody.innerHTML = `You are deleting :<br><strong>First Name : ${firstName}<br>Last Name : ${lastName}<br>National Code : ${nationalCode}</strong><br>Are you sure ?`;
+}
 
 function TriggerResultMessage(message) {
     resultMessage.innerText = message;

@@ -80,17 +80,40 @@ namespace SinglePage.Sample01.Models.Services.Repositories
             {
                 throw;
             }
-        } 
+        }
         #endregion
 
+        #region [- Delete() -]
+        public async Task<IResponse<Person>> Delete(Person model)
+        {
+            try
+            {
+                var DeleteRecord = await _projectDbContext.Person.FindAsync(model.Id);
+                if (DeleteRecord == null) 
+                {
+                    return new Response<Person>(false, HttpStatusCode.NotFound, "Person not found", null);
+
+                }
+                if (model is null)
+                {
+                    return new Response<Person>(false, HttpStatusCode.UnprocessableContent, ResponseMessages.NullInput, null);
+                }
+                _projectDbContext.Person.Remove(model);
+                await _projectDbContext.SaveChangesAsync();
+                var response = new Response<Person>(true, HttpStatusCode.OK, ResponseMessages.SuccessfullOperation, model);
+                return response;
+            }
+            catch (Exception)
+            {
+                return new Response<Person>(false, HttpStatusCode.InternalServerError, "Message", null);
+            }
+        }
+        #endregion
         public Task<IResponse<Person>> Update(Person obj)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IResponse<Person>> Delete(Person obj)
-        {
-            throw new NotImplementedException();
-        }
+  
     }
 }

@@ -22,7 +22,7 @@ var emailValidationMessage = document.getElementById("emailValidationMessage");
 
 // Delete Modal
 var deleteConfirmModal = document.getElementById("deleteConfirmModal");
-var inDeleteConfirmModalId = document.getElementById("inDeleteConfirmModalId");
+var idInDeleteConfirmModal = document.getElementById("inDeleteConfirmModalId");
 var deleteConfirmModalBody = document.getElementById("deleteConfirmModalBody");
 
 // Details Modal
@@ -38,7 +38,7 @@ form.addEventListener("submit", Add);
 btnRefresh.addEventListener("click", LoadData);
 //btnEdit.addEventListener("click", Edit);
 //chkSelectAll.addEventListener("click", DeselectAll);
-//deleteConfirmModal.addEventListener("show.bs.modal", ConfirmDelete);
+deleteConfirmModal.addEventListener("show.bs.modal", ConfirmDelete);
 //detailsModal.addEventListener("show.bs.modal", Details);
 
 
@@ -89,6 +89,7 @@ function Add(e) {
             LastName: lastName.value,
             Email: email.value
         };
+        console.log("start loading");
         fetch("http://Localhost:5268/Person/Post", {
             method: "POST",
             headers: {
@@ -145,12 +146,14 @@ function Add(e) {
 
 function Delete() {
     let id = idInDeleteConfirmModal.value;
-    fetch("http://Localhost:5268/Person/Delete", {
-        method: "POST",
+    fetch("http://localhost:5268/Person/Delete", {
+        method: "DELETE",
         headers: {
             "Content-Type": "application/json",
             Accept: "*/*",
         },
+   
+
         body: JSON.stringify({ Id: id }),
     }).then((res) => {
         if (res.status == 200) {
@@ -160,6 +163,8 @@ function Delete() {
             TriggerResultMessage("Operation Failed");
         }
     });
+    console.log(idInDeleteConfirmModal.value);
+
     idInDeleteConfirmModal.value = "";
 }
 
@@ -168,7 +173,7 @@ function DeleteSelected() {
     selectedRowsList.forEach((personId) => {
         deleteSelectedDto.DeletePersonDtosList.push({ Id: personId });
     });
-    fetch("http://Localhost:5268/Person/DeleteSelected", {
+    fetch("http://localhost:5268/Person/DeleteSelected", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -314,13 +319,14 @@ function ValidateFormData() {
 
 function ConfirmDelete(event) {
     let clickedButton = event.relatedTarget;
+    console.log(clickedButton.parentNode.parentNode.id);
 
     if (clickedButton.value == "Delete") {
         let id = clickedButton.parentNode.parentNode.id;
         idInDeleteConfirmModal.value = id;
 
-        PassDetailsToDeleteConfirm(id);
-
+        //PassDetailsToDeleteConfirm(id);
+        console.log(btnDeleteConfirm);
         btnDeleteConfirm.addEventListener("click", Delete);
         //btnDeleteConfirm.onclick = Delete;
     } else {
@@ -341,7 +347,7 @@ function PassDetailsToDeleteConfirm(id) {
         `tr[id="${id}"] td[id="LNTD"]`
     ).innerText;
     let nationalCode = document.querySelector(
-        `tr[id="${id}"] td[id="NCTD"]`
+        `tr[id="${id}"] td[id="ETD"]`
     ).innerText;
     deleteConfirmModalBody.innerHTML = `You are deleting :<br><strong>First Name : ${firstName}<br>Last Name : ${lastName}<br>National Code : ${nationalCode}</strong><br>Are you sure ?`;
 }

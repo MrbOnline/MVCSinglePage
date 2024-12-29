@@ -73,7 +73,7 @@ namespace SinglePage.Sample01.Controllers
 
         #region [- Delete() -]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromBody] DeletePersonServiceDto dto)
+        public async Task<IActionResult> Delete(DeletePersonServiceDto dto)
         {
             // Guard_PersonService();
             var personToDelete = new DeletePersonServiceDto() { Id = dto.Id };
